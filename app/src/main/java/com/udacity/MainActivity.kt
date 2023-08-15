@@ -13,12 +13,10 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import com.udacity.databinding.ActivityMainBinding
-import com.udacity.databinding.ContentMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainBinding: ActivityMainBinding
-    private lateinit var contentBinding: ContentMainBinding
 
     private var downloadID: Long = 0
 
@@ -29,17 +27,16 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
-        contentBinding = ContentMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
         setSupportActionBar(mainBinding.toolbar)
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
-        contentBinding.customButton.setOnClickListener {
+        mainBinding.customButton.setOnClickListener {
             Log.d("WADE", "onClickListener called")
-            contentBinding.customButton.changeState(ButtonState.Loading)
+            mainBinding.customButton.changeState(ButtonState.Loading)
             Thread.sleep(1000)
-            contentBinding.customButton.changeState(ButtonState.Completed)
+            mainBinding.customButton.changeState(ButtonState.Completed)
 //            download()
         }
     }

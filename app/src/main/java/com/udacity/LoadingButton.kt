@@ -18,14 +18,13 @@ class LoadingButton @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     private var widthSize = 0
-    private var heightSize
-    = 0
+    private var heightSize = 0
     private var defaultButtonColour = 0
     private var loadingColour = 0
-
+    private var loadingProgress = 0f
     private var buttonText: String = resources.getString(R.string.button_name)
 
-    private val valueAnimator = ValueAnimator()
+    private var valueAnimator: ValueAnimator
 
     private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
 
@@ -59,6 +58,10 @@ class LoadingButton @JvmOverloads constructor(
         color = Color.WHITE
     }
 
+    private val loadingRectPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+    }
+
     val textHeight: Float = textPaint.descent() - textPaint.ascent()
     val textOffset: Float = textHeight / 2 - textPaint.descent()
 
@@ -69,14 +72,24 @@ class LoadingButton @JvmOverloads constructor(
             defaultButtonColour = getColor(R.styleable.LoadingButton_defaultButtonColour, 0)
             loadingColour = getColor(R.styleable.LoadingButton_loadingColour, 0)
         }
-    }
+        valueAnimator = ValueAnimator.ofFloat(0f,100f)
+        valueAnimator.duration = 2000
+        valueAnimator.repeatCount = ValueAnimator.INFINITE
+        valueAnimator.repeatMode = ValueAnimator.RESTART
+        valueAnimator.addUpdateListener {
+            loadingProgress = valueAnimator.animatedValue as Float
+            invalidate()
+        }
 
+    }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         rectPaint.color = defaultButtonColour
+        loadingRectPaint.color = loadingColour
         canvas.drawRect(0f, 0f, widthSize.toFloat(), heightSize.toFloat(), rectPaint)
         canvas.drawText(buttonText, widthSize * 0.5f, heightSize * 0.5f + textOffset, textPaint)
+        canvas.drawRect(0f, 0f, widthSize.toFloat()*loadingProgress/100, heightSize.toFloat(), loadingRectPaint)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
