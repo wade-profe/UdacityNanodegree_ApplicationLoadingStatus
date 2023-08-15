@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import com.udacity.databinding.ActivityMainBinding
@@ -35,7 +36,11 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
         contentBinding.customButton.setOnClickListener {
-            download()
+            Log.d("WADE", "onClickListener called")
+            contentBinding.customButton.changeState(ButtonState.Loading)
+            Thread.sleep(1000)
+            contentBinding.customButton.changeState(ButtonState.Completed)
+//            download()
         }
     }
 
