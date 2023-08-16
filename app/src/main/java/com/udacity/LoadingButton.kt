@@ -1,7 +1,5 @@
 package com.udacity
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
@@ -9,13 +7,9 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
-import android.widget.Button
 import androidx.core.animation.doOnEnd
 import androidx.core.content.withStyledAttributes
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import kotlin.properties.Delegates
 
 class LoadingButton @JvmOverloads constructor(
@@ -26,6 +20,7 @@ class LoadingButton @JvmOverloads constructor(
     private var heightSize = 0
     private var defaultButtonColour = 0
     private var loadingColour = 0
+    private var circleColour = 0
     private var loadingProgress = 0f
     private var buttonText: String = resources.getString(R.string.button_name)
 
@@ -70,6 +65,10 @@ class LoadingButton @JvmOverloads constructor(
         style = Paint.Style.FILL
     }
 
+    private val circlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+    }
+
     val textHeight: Float = textPaint.descent() - textPaint.ascent()
     val textOffset: Float = textHeight / 2 - textPaint.descent()
 
@@ -79,10 +78,10 @@ class LoadingButton @JvmOverloads constructor(
         context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
             defaultButtonColour = getColor(R.styleable.LoadingButton_defaultButtonColour, 0)
             loadingColour = getColor(R.styleable.LoadingButton_loadingColour, 0)
+            circleColour = getColor(R.styleable.LoadingButton_circleColour, 0)
         }
         valueAnimator = ValueAnimator.ofFloat(0f, 100f)
         valueAnimator.duration = 2000
-//        valueAnimator.repeatCount = ValueAnimator.INFINITE
         valueAnimator.repeatMode = ValueAnimator.RESTART
         valueAnimator.addUpdateListener {
             loadingProgress = valueAnimator.animatedValue as Float
@@ -95,6 +94,7 @@ class LoadingButton @JvmOverloads constructor(
         super.onDraw(canvas)
         rectPaint.color = defaultButtonColour
         loadingRectPaint.color = loadingColour
+        circlePaint.color = circleColour
         canvas.drawRect(0f, 0f, widthSize.toFloat(), heightSize.toFloat(), rectPaint)
         canvas.drawRect(
             0f,
@@ -103,7 +103,26 @@ class LoadingButton @JvmOverloads constructor(
             heightSize.toFloat(),
             loadingRectPaint
         )
-        canvas.drawText(buttonText, widthSize * 0.5f, heightSize * 0.5f + textOffset, textPaint)
+
+        val textX = widthSize * 0.5f
+        val textY = heightSize * 0.5f + textOffset
+        val textLength = textPaint.measureText(buttonText, 0, buttonText.length - 1)
+        val circleLeft = (textX + textLength / 1.8).toFloat()
+        val circleTop = textY + textPaint.ascent()
+        val circleRight = circleLeft + 75f
+        val circleBottom = textY + textPaint.descent()
+
+        canvas.drawText(buttonText, textX, textY, textPaint)
+        canvas.drawArc(
+            circleLeft,
+            circleTop,
+            circleRight,
+            circleBottom,
+            0f,
+            360f * loadingProgress / 100,
+            true,
+            circlePaint
+        )
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

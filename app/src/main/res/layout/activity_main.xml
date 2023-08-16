@@ -80,5 +80,6 @@
         android:layout_margin="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:defaultButtonColour="@color/buttonUnclicked"
-        app:loadingColour="@color/loadingColour"/>
+        app:loadingColour="@color/loadingColour"
+        app:circleColour="@color/circleColour"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
