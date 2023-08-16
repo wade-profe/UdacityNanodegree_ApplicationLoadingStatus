@@ -1,5 +1,7 @@
 package com.udacity
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
@@ -10,7 +12,10 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import androidx.core.animation.doOnEnd
 import androidx.core.content.withStyledAttributes
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import kotlin.properties.Delegates
 
 class LoadingButton @JvmOverloads constructor(
@@ -24,21 +29,24 @@ class LoadingButton @JvmOverloads constructor(
     private var loadingProgress = 0f
     private var buttonText: String = resources.getString(R.string.button_name)
 
-    private var valueAnimator: ValueAnimator
+    private var valueAnimator = ValueAnimator()
 
     private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
 
         when (new) {
             ButtonState.Loading -> {
-                Log.d("WADE", "button state set to loading")
                 buttonText = resources.getString(R.string.button_loading)
-                invalidate()
+                valueAnimator.repeatCount = ValueAnimator.INFINITE
+                valueAnimator.start()
             }
 
             ButtonState.Completed -> {
-                Log.d("WADE", "button state set to completed")
-                buttonText = resources.getString(R.string.button_name)
-                invalidate()
+                valueAnimator.repeatCount = 0
+                valueAnimator.doOnEnd {
+                    buttonText = resources.getString(R.string.button_name)
+                    loadingProgress = 0f
+                    invalidate()
+                }
             }
 
             else -> {}
@@ -68,13 +76,13 @@ class LoadingButton @JvmOverloads constructor(
 
     init {
         isClickable = true
-        context.withStyledAttributes(attrs, R.styleable.LoadingButton){
+        context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
             defaultButtonColour = getColor(R.styleable.LoadingButton_defaultButtonColour, 0)
             loadingColour = getColor(R.styleable.LoadingButton_loadingColour, 0)
         }
-        valueAnimator = ValueAnimator.ofFloat(0f,100f)
+        valueAnimator = ValueAnimator.ofFloat(0f, 100f)
         valueAnimator.duration = 2000
-        valueAnimator.repeatCount = ValueAnimator.INFINITE
+//        valueAnimator.repeatCount = ValueAnimator.INFINITE
         valueAnimator.repeatMode = ValueAnimator.RESTART
         valueAnimator.addUpdateListener {
             loadingProgress = valueAnimator.animatedValue as Float
@@ -88,8 +96,14 @@ class LoadingButton @JvmOverloads constructor(
         rectPaint.color = defaultButtonColour
         loadingRectPaint.color = loadingColour
         canvas.drawRect(0f, 0f, widthSize.toFloat(), heightSize.toFloat(), rectPaint)
+        canvas.drawRect(
+            0f,
+            0f,
+            widthSize.toFloat() * loadingProgress / 100,
+            heightSize.toFloat(),
+            loadingRectPaint
+        )
         canvas.drawText(buttonText, widthSize * 0.5f, heightSize * 0.5f + textOffset, textPaint)
-        canvas.drawRect(0f, 0f, widthSize.toFloat()*loadingProgress/100, heightSize.toFloat(), loadingRectPaint)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -105,7 +119,7 @@ class LoadingButton @JvmOverloads constructor(
         setMeasuredDimension(w, h)
     }
 
-    fun changeState(newState: ButtonState){
+    fun changeState(newState: ButtonState) {
         buttonState = newState
     }
 
