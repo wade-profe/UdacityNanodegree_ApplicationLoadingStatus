@@ -30,6 +30,7 @@ class LoadingButton @JvmOverloads constructor(
 
         when (new) {
             ButtonState.Loading -> {
+                isClickable = false
                 buttonText = resources.getString(R.string.button_loading)
                 valueAnimator.repeatCount = ValueAnimator.INFINITE
                 valueAnimator.start()
@@ -40,6 +41,7 @@ class LoadingButton @JvmOverloads constructor(
                 valueAnimator.doOnEnd {
                     buttonText = resources.getString(R.string.button_name)
                     loadingProgress = 0f
+                    isClickable = true
                     invalidate()
                 }
             }
@@ -96,33 +98,39 @@ class LoadingButton @JvmOverloads constructor(
         loadingRectPaint.color = loadingColour
         circlePaint.color = circleColour
         canvas.drawRect(0f, 0f, widthSize.toFloat(), heightSize.toFloat(), rectPaint)
-        canvas.drawRect(
-            0f,
-            0f,
-            widthSize.toFloat() * loadingProgress / 100,
-            heightSize.toFloat(),
-            loadingRectPaint
-        )
 
         val textX = widthSize * 0.5f
         val textY = heightSize * 0.5f + textOffset
-        val textLength = textPaint.measureText(buttonText, 0, buttonText.length - 1)
-        val circleLeft = (textX + textLength / 1.8).toFloat()
-        val circleTop = textY + textPaint.ascent()
-        val circleRight = circleLeft + 75f
-        val circleBottom = textY + textPaint.descent()
+
+        if(loadingProgress > 0){
+            canvas.drawRect(
+                0f,
+                0f,
+                widthSize.toFloat() * loadingProgress / 100,
+                heightSize.toFloat(),
+                loadingRectPaint
+            )
+
+            val textLength = textPaint.measureText(buttonText, 0, buttonText.length - 1)
+            val circleLeft = (textX + textLength / 1.8).toFloat()
+            val circleTop = textY + textPaint.ascent()
+            val circleRight = circleLeft + 75f
+            val circleBottom = textY + textPaint.descent()
+
+            canvas.drawArc(
+                circleLeft,
+                circleTop,
+                circleRight,
+                circleBottom,
+                0f,
+                360f * loadingProgress / 100,
+                true,
+                circlePaint
+            )
+        }
 
         canvas.drawText(buttonText, textX, textY, textPaint)
-        canvas.drawArc(
-            circleLeft,
-            circleTop,
-            circleRight,
-            circleBottom,
-            0f,
-            360f * loadingProgress / 100,
-            true,
-            circlePaint
-        )
+
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
