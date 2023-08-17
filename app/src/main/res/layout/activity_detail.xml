@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailActivity">
+    tools:context=".DetailActivity"
+    app:layoutDescription="@xml/activity_detail_scene">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
@@ -20,14 +26,53 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_detail" />
+<!--    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:stretchColumns="*">-->
+<!--        <TableRow>-->
+<!--            <TextView-->
+<!--                android:text="@string/table_layout_4_open"-->
+<!--                android:padding="3dip" />-->
+<!--            <TextView-->
+<!--                android:text="@string/table_layout_4_open_shortcut"-->
+<!--                android:gravity="right"-->
+<!--                android:padding="3dip" />-->
+<!--        </TableRow>-->
+
+<!--        <TableRow>-->
+<!--            <TextView-->
+<!--                android:text="@string/table_layout_4_save"-->
+<!--                android:padding="3dip" />-->
+<!--            <TextView-->
+<!--                android:text="@string/table_layout_4_save_shortcut"-->
+<!--                android:gravity="right"-->
+<!--                android:padding="3dip" />-->
+<!--        </TableRow>-->
+<!--    </TableLayout>-->
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/appBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="FileName"
+        android:id="@+id/text1" />
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Status"
+        android:id="@+id/text2" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@drawable/back_arrow_foreground"
+        app:maxImageSize="56dp"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

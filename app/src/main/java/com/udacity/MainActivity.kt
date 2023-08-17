@@ -3,7 +3,6 @@ package com.udacity
 import android.app.DownloadManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -12,24 +11,26 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
 import com.udacity.databinding.ActivityMainBinding
 
+
+private enum class DownloadResults(val description: String){
+    PASSED("Successful"),
+    FAILED("Fail")
+}
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainBinding: ActivityMainBinding
-
     private var downloadID: Long = 0
-
     private lateinit var notificationManager: NotificationManager
-    private lateinit var pendingIntent: PendingIntent
-    private lateinit var action: NotificationCompat.Action
     private lateinit var downloadManager: DownloadManager
-
     private var selectedURL: String? = null
+    private var fileName: String? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,11 +50,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         mainBinding.radioGroup.setOnCheckedChangeListener { _, i ->
-            selectedURL = when (i) {
-                R.id.glide_option -> GLIDE_URL
-                R.id.udacity_option -> UDACITY_URL
-                R.id.retrofit_option -> RETROFIT_URL
-                else -> null
+            when (i) {
+                R.id.glide_option -> {
+                    selectedURL = GLIDE_URL
+                    fileName = mainBinding.glideOption.text.toString()
+                }
+                R.id.udacity_option -> {
+                    selectedURL = UDACITY_URL
+                    fileName = mainBinding.udacityOption.text.toString()
+                }
+                R.id.retrofit_option -> {
+                    selectedURL = RETROFIT_URL
+                    fileName = mainBinding.retrofitOption.text.toString()
+                }
             }
         }
     }
@@ -67,12 +76,13 @@ class MainActivity : AppCompatActivity() {
                     val downloadStatus: Int =
                         result.getInt(result.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
                     if(downloadStatus != DownloadManager.STATUS_SUCCESSFUL){
-                        Toast.makeText(applicationContext, "Download failed", Toast.LENGTH_LONG).show()
+                        notificationManager.sendNotification(applicationContext, CHANNEL_ID, fileName,DownloadResults.FAILED.description)
                     } else{
-                        notificationManager.sendNotification(applicationContext, CHANNEL_ID, "","")
+                        notificationManager.sendNotification(applicationContext, CHANNEL_ID, fileName,DownloadResults.PASSED.description)
                     }
                 }
                 mainBinding.customButton.changeState(ButtonState.Completed)
+                result.close()
             }
         }
     }
