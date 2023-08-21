@@ -45,6 +45,8 @@ class DetailActivity : AppCompatActivity() {
             }
         }
 
-
+//        binding.motionLayout.getConstraintSet(R.id.end).apply {
+//            this.customAttributeSet.put("customColorValue", "#008000")
+//        }
     }
 }
