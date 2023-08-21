@@ -23,7 +23,7 @@ fun NotificationManager.sendNotification(
         context,
         NOTIFICATION_ID,
         detailsIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 
     val action = NotificationCompat.Action.Builder(

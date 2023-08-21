@@ -146,4 +146,12 @@ class MainActivity : AppCompatActivity() {
         private const val CHANNEL_NAME = "Downloads"
 
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
+    }
+
+    // TODO make strings variables
+    // TODO figure out programmatic change for customColorValue
 }
