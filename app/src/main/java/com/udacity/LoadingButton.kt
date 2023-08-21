@@ -26,7 +26,7 @@ class LoadingButton @JvmOverloads constructor(
 
     private var valueAnimator = ValueAnimator()
 
-    private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
+    private var buttonState: ButtonState by Delegates.observable(ButtonState.Completed) { p, old, new ->
 
         when (new) {
             ButtonState.Loading -> {
@@ -45,8 +45,6 @@ class LoadingButton @JvmOverloads constructor(
                     invalidate()
                 }
             }
-
-            else -> {}
         }
 
     }
@@ -71,8 +69,8 @@ class LoadingButton @JvmOverloads constructor(
         style = Paint.Style.FILL
     }
 
-    val textHeight: Float = textPaint.descent() - textPaint.ascent()
-    val textOffset: Float = textHeight / 2 - textPaint.descent()
+    private val textHeight: Float = textPaint.descent() - textPaint.ascent()
+    private val textOffset: Float = textHeight / 2 - textPaint.descent()
 
 
     init {

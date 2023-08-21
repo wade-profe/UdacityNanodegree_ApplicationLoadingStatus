@@ -11,7 +11,6 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.OpenableColumns
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.udacity.databinding.ActivityMainBinding
@@ -42,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
-        createChannel(CHANNEL_ID, CHANNEL_NAME)
+        createChannel()
 
         mainBinding.customButton.setOnClickListener {
             mainBinding.customButton.changeState(ButtonState.Loading)
@@ -113,11 +112,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun createChannel(channelId: String, channelName: String) {
+    private fun createChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
-                channelId,
-                channelName,
+                CHANNEL_ID,
+                CHANNEL_NAME,
                 NotificationManager.IMPORTANCE_DEFAULT
             )
                 .apply {
@@ -151,7 +150,4 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         unregisterReceiver(receiver)
     }
-
-    // TODO make strings variables
-    // TODO figure out programmatic change for customColorValue
 }

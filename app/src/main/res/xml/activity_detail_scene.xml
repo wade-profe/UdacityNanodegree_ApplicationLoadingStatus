@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <Transition
+        app:autoTransition="animateToEnd"
         app:constraintSetEnd="@id/end"
         app:constraintSetStart="@+id/start"
-        app:autoTransition="animateToEnd"
-        app:duration="1000"/>
+        app:duration="1000" />
 
     <ConstraintSet android:id="@+id/start">
         <Constraint
@@ -14,14 +14,7 @@
             android:layout_width="1dp"
             android:layout_height="1dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-        <Constraint
-            android:id="@+id/statusResult2">
-            <CustomAttribute
-                app:attributeName="textColor"
-                app:customColorValue="#000000"/>
-        </Constraint>
+            app:layout_constraintStart_toStartOf="parent" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
@@ -30,14 +23,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            />
-        <Constraint
-            android:id="@+id/statusResult2">
-            <CustomAttribute
-                app:attributeName="textColor"
-                app:customColorValue="#008000"/>
-        </Constraint>
+            app:layout_constraintStart_toStartOf="parent" />
     </ConstraintSet>
 
 </MotionScene>

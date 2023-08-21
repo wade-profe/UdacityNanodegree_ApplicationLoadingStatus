@@ -3,7 +3,6 @@
     <color name="colorPrimary">#07C2AA</color>
     <color name="colorPrimaryDark">#004349</color>
     <color name="colorAccent">#F9A825</color>
-    <color name="white">#FFFFFF</color>
     <color name="buttonUnclicked">#03fcc2</color>
     <color name="loadingColour">#163d34</color>
     <color name="circleColour">#d4ad22</color>

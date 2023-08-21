@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/motionLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DetailActivity"
@@ -27,7 +26,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <TableLayout
         android:id="@+id/contentTable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,9 +39,8 @@
         >
         <TableRow>
             <TextView
-                android:id="@+id/fileNameText"
                 android:layout_width="0dp"
-                android:text="File Name:"
+                android:text="@string/file_name_header"
                 android:layout_weight="0.5"
                 android:textSize="@dimen/default_text_size"/>
             <TextView
@@ -57,9 +55,8 @@
 
         <TableRow>
             <TextView
-                android:id="@+id/statusText"
                 android:layout_width="0dp"
-                android:text="Status:"
+                android:text="@string/status_header"
                 android:textSize="@dimen/default_text_size"
                 android:layout_weight="0.5"
                 android:paddingTop="10dp"/>
@@ -69,20 +66,10 @@
                 android:textAlignment="viewStart"
                 android:layout_weight="0.5"
                 android:paddingTop="10dp"
-                android:textSize="@dimen/default_text_size"/>
+                android:textSize="@dimen/default_text_size"
+                android:textColor="@android:color/black"/>
         </TableRow>
     </TableLayout>
-
-    <TextView
-        android:id="@+id/statusResult2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/contentTable"
-        android:text="I AM GREEN"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -92,6 +79,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/back_arrow_foreground"
         app:maxImageSize="56dp"
-        android:layout_margin="16dp"/>
+        android:layout_margin="16dp"
+        android:contentDescription="@string/back_button"/>
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

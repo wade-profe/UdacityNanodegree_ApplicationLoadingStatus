@@ -3,12 +3,8 @@ package com.udacity
 import android.app.NotificationManager
 import android.content.Intent
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.constraintlayout.widget.ConstraintAttribute
 import com.udacity.databinding.ActivityDetailBinding
 
 
@@ -17,7 +13,6 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private lateinit var notificationManager: NotificationManager
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
@@ -31,9 +26,10 @@ class DetailActivity : AppCompatActivity() {
         if(intent.getStringExtra("result").equals(DownloadResults.PASSED.description)){
             binding.statusResult.text = DownloadResults.PASSED.description
         } else {
-            binding.statusResult.text = DownloadResults.FAILED.description
-            binding.statusResult.setTextColor(Color.RED)
-
+            binding.statusResult.apply{
+                text = DownloadResults.FAILED.description
+                setTextColor(Color.RED)
+            }
         }
 
         notificationManager.cancel()
@@ -45,8 +41,5 @@ class DetailActivity : AppCompatActivity() {
             }
         }
 
-//        binding.motionLayout.getConstraintSet(R.id.end).apply {
-//            this.customAttributeSet.put("customColorValue", "#008000")
-//        }
     }
 }

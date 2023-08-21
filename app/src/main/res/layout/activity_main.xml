@@ -33,10 +33,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/ic_launcher_foreground"
         android:background="@color/ic_launcher_background"
+        android:contentDescription="@string/download_image"
         />
 
     <RadioGroup
-        android:id="@+id/radio_group"
+        android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +50,7 @@
             android:id="@+id/glide_option"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Glide - Image Loading Library by BumpTech"
+            android:text="@string/gilde_description"
             android:textSize="@dimen/default_text_size"
             android:padding="10dp">
         </RadioButton>
@@ -58,7 +59,7 @@
             android:id="@+id/udacity_option"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="LoadApp - Current Repository by Udacity"
+            android:text="@string/loadapp_description"
             android:textSize="@dimen/default_text_size"
             android:padding="10dp">
         </RadioButton>
@@ -67,7 +68,7 @@
             android:id="@+id/retrofit_option"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Retrofit - Type-safe HTTP client for Android and Java by Square, Inc"
+            android:text="@string/retrofit_description"
             android:textSize="@dimen/default_text_size"
             android:padding="10dp">
         </RadioButton>
