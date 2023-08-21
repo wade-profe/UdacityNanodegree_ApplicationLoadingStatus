@@ -17,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.udacity.databinding.ActivityMainBinding
 
 
-private enum class DownloadResults(val description: String){
+enum class DownloadResults(val description: String){
     PASSED("Successful"),
     FAILED("Fail")
 }
@@ -76,9 +76,9 @@ class MainActivity : AppCompatActivity() {
                     val downloadStatus: Int =
                         result.getInt(result.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
                     if(downloadStatus != DownloadManager.STATUS_SUCCESSFUL){
-                        notificationManager.sendNotification(applicationContext, CHANNEL_ID, fileName,DownloadResults.FAILED.description)
+                        notificationManager.sendNotification(applicationContext, CHANNEL_ID, fileName,DownloadResults.FAILED)
                     } else{
-                        notificationManager.sendNotification(applicationContext, CHANNEL_ID, fileName,DownloadResults.PASSED.description)
+                        notificationManager.sendNotification(applicationContext, CHANNEL_ID, fileName,DownloadResults.PASSED)
                     }
                 }
                 mainBinding.customButton.changeState(ButtonState.Completed)

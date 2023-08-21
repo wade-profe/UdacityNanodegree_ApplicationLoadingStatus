@@ -50,7 +50,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Glide - Image Loading Library by BumpTech"
-            android:textSize="@dimen/default_text_size">
+            android:textSize="@dimen/default_text_size"
+            android:padding="10dp">
         </RadioButton>
 
         <RadioButton
@@ -58,7 +59,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="LoadApp - Current Repository by Udacity"
-            android:textSize="@dimen/default_text_size">
+            android:textSize="@dimen/default_text_size"
+            android:padding="10dp">
         </RadioButton>
 
         <RadioButton
@@ -66,7 +68,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Retrofit - Type-safe HTTP client for Android and Java by Square, Inc"
-            android:textSize="@dimen/default_text_size">
+            android:textSize="@dimen/default_text_size"
+            android:padding="10dp">
         </RadioButton>
 
     </RadioGroup>

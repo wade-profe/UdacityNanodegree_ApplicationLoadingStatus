@@ -12,12 +12,12 @@ fun NotificationManager.sendNotification(
     context: Context,
     channelId: String,
     fileName: String?,
-    result: String?
+    result: DownloadResults?
 ) {
 
     val detailsIntent = Intent(context, DetailActivity::class.java)
         .putExtra("fileName", fileName)
-        .putExtra("result", result)
+        .putExtra("result", result?.description)
 
     val detailsPendingIntent = PendingIntent.getActivity(
         context,
@@ -41,4 +41,8 @@ fun NotificationManager.sendNotification(
 
     notify(NOTIFICATION_ID, builder.build())
 
+}
+
+fun NotificationManager.cancel(){
+    cancel(NOTIFICATION_ID)
 }

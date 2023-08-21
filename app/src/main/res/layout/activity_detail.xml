@@ -26,44 +26,52 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-<!--    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:stretchColumns="*">-->
-<!--        <TableRow>-->
-<!--            <TextView-->
-<!--                android:text="@string/table_layout_4_open"-->
-<!--                android:padding="3dip" />-->
-<!--            <TextView-->
-<!--                android:text="@string/table_layout_4_open_shortcut"-->
-<!--                android:gravity="right"-->
-<!--                android:padding="3dip" />-->
-<!--        </TableRow>-->
-
-<!--        <TableRow>-->
-<!--            <TextView-->
-<!--                android:text="@string/table_layout_4_save"-->
-<!--                android:padding="3dip" />-->
-<!--            <TextView-->
-<!--                android:text="@string/table_layout_4_save_shortcut"-->
-<!--                android:gravity="right"-->
-<!--                android:padding="3dip" />-->
-<!--        </TableRow>-->
-<!--    </TableLayout>-->
-
-    <TextView
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/contentTable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/appBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="FileName"
-        android:id="@+id/text1" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:stretchColumns="*"
+        android:padding="25dp"
 
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/text1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Status"
-        android:id="@+id/text2" />
+        >
+        <TableRow>
+            <TextView
+                android:id="@+id/fileNameText"
+                android:layout_width="0dp"
+                android:text="File Name:"
+                android:layout_weight="0.5"
+                android:textSize="@dimen/default_text_size"/>
+            <TextView
+                android:id="@+id/fileNameResult"
+                android:layout_width="0dp"
+                android:textAlignment="viewStart"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:textSize="@dimen/default_text_size"
+                android:textColor="@android:color/black"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/statusText"
+                android:layout_width="0dp"
+                android:text="Status:"
+                android:textSize="@dimen/default_text_size"
+                android:layout_weight="0.5"
+                android:paddingTop="10dp"/>
+            <TextView
+                android:id="@+id/statusResult"
+                android:layout_width="0dp"
+                android:textColor="@android:color/black"
+                android:textAlignment="viewStart"
+                android:layout_weight="0.5"
+                android:paddingTop="10dp"
+                android:textSize="@dimen/default_text_size"/>
+        </TableRow>
+    </TableLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
