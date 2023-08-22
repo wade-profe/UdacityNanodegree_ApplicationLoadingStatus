@@ -7,16 +7,18 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.udacity.databinding.ActivityMainBinding
 
 
-enum class DownloadResults(val description: String){
+enum class DownloadResults(val description: String) {
     PASSED("Successful"),
     FAILED("Fail")
 }
@@ -37,15 +39,47 @@ class MainActivity : AppCompatActivity() {
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
         setSupportActionBar(mainBinding.toolbar)
-        notificationManager = getSystemService(NotificationManager::class.java) as NotificationManager
+        notificationManager =
+            getSystemService(NotificationManager::class.java) as NotificationManager
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
         createChannel()
 
+        val notificationPermissionRequestLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (!isGranted) {
+                    Toast.makeText(
+                        applicationContext,
+                        "Permission denied. You will not see notifications",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                download()
+            }
+
         mainBinding.customButton.setOnClickListener {
             mainBinding.customButton.changeState(ButtonState.Loading)
-            download()
+            selectedURL?.let {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                    checkSelfPermission(PERMISSION_TEXT) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    notificationPermissionRequestLauncher.launch(PERMISSION_TEXT)
+                } else{
+                    download()
+                }
+            }
+                ?: run {
+                    Toast.makeText(
+                        applicationContext,
+                        "Please select the file to download",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    mainBinding.customButton.changeState(ButtonState.Completed)
+                }
+
         }
 
         mainBinding.radioGroup.setOnCheckedChangeListener { _, i ->
@@ -54,10 +88,12 @@ class MainActivity : AppCompatActivity() {
                     selectedURL = GLIDE_URL
                     fileName = mainBinding.glideOption.text.toString()
                 }
+
                 R.id.udacity_option -> {
                     selectedURL = UDACITY_URL
                     fileName = mainBinding.udacityOption.text.toString()
                 }
+
                 R.id.retrofit_option -> {
                     selectedURL = RETROFIT_URL
                     fileName = mainBinding.retrofitOption.text.toString()
@@ -69,15 +105,26 @@ class MainActivity : AppCompatActivity() {
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-            if(id == downloadID){
-                val result: Cursor = downloadManager.query(DownloadManager.Query().setFilterById(id))
-                if(result.moveToFirst()){
+            if (id == downloadID) {
+                val result: Cursor =
+                    downloadManager.query(DownloadManager.Query().setFilterById(id))
+                if (result.moveToFirst()) {
                     val downloadStatus: Int =
                         result.getInt(result.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
-                    if(downloadStatus != DownloadManager.STATUS_SUCCESSFUL){
-                        notificationManager.sendNotification(applicationContext, CHANNEL_ID, fileName,DownloadResults.FAILED)
-                    } else{
-                        notificationManager.sendNotification(applicationContext, CHANNEL_ID, fileName,DownloadResults.PASSED)
+                    if (downloadStatus != DownloadManager.STATUS_SUCCESSFUL) {
+                        notificationManager.sendNotification(
+                            applicationContext,
+                            CHANNEL_ID,
+                            fileName,
+                            DownloadResults.FAILED
+                        )
+                    } else {
+                        notificationManager.sendNotification(
+                            applicationContext,
+                            CHANNEL_ID,
+                            fileName,
+                            DownloadResults.PASSED
+                        )
                     }
                 }
                 mainBinding.customButton.changeState(ButtonState.Completed)
@@ -99,17 +146,6 @@ class MainActivity : AppCompatActivity() {
             downloadID =
                 downloadManager.enqueue(request)// enqueue puts the download request in the queue.
         }
-            ?: run{
-                Toast.makeText(
-                    applicationContext,
-                    "Please select the file to download",
-                    Toast.LENGTH_LONG
-                ).show()
-
-                mainBinding.customButton.changeState(ButtonState.Completed)
-
-            }
-
     }
 
     private fun createChannel() {
@@ -143,6 +179,7 @@ class MainActivity : AppCompatActivity() {
 
         private const val CHANNEL_ID = "download_channel"
         private const val CHANNEL_NAME = "Downloads"
+        private const val PERMISSION_TEXT = "android.permission.POST_NOTIFICATIONS"
 
     }
 
@@ -150,4 +187,5 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         unregisterReceiver(receiver)
     }
+
 }
